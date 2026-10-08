@@ -30,3 +30,10 @@ Exclusive (write) lock only. No read/shared mode. The `poll_interval` controls c
 - `FileLock(path, *, poll_interval=0.1, clock=time.monotonic)` — the lock. Methods: `acquire(timeout=None)`, `release()`, `is_locked`. Context-manager capable.
 - `LockTimeoutError` — subclass of `TimeoutError`, raised on timeout.
 - `LockState` — constants `OWNED_BY_OTHER`, `STALE_OWNER_DEAD` used in `FileLock.stale_reason`.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
